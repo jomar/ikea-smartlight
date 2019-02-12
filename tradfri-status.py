@@ -18,6 +18,7 @@
     that supports coap with dTLS. see ../bin/README how to compile libcoap with dTLS support
 """
 
+# -*- coding: utf-8 -*- 
 # pylint convention disablement:
 # C0103 -> invalid-name
 # C0200 -> consider-using-enumerate
@@ -39,16 +40,17 @@ def main():
 
     hubip = conf.get('tradfri', 'hubip')
     securityid = conf.get('tradfri', 'securityid')
+    clientid = conf.get('tradfri', 'clientid')
 
     lightbulb = []
     lightgroup = []
 
     print('[ ] Tradfri: acquiring all Tradfri devices, please wait ...')
-    devices = tradfriStatus.tradfri_get_devices(hubip, securityid)
-    groups = tradfriStatus.tradfri_get_groups(hubip, securityid)
+    devices = tradfriStatus.tradfri_get_devices(hubip, clientid, securityid)
+    groups = tradfriStatus.tradfri_get_groups(hubip, clientid, securityid)
 
     for deviceid in tqdm(range(len(devices)), desc='Tradfri lightbulbs', unit=' lightbulb'):
-        lightbulb.append(tradfriStatus.tradfri_get_lightbulb(hubip, securityid,
+        lightbulb.append(tradfriStatus.tradfri_get_lightbulb(hubip, clientid, securityid,
                                                              str(devices[deviceid])))
 
     # sometimes the request are to fast, the will decline the request (flood security)
@@ -56,7 +58,7 @@ def main():
     time.sleep(.5)
 
     for groupid in tqdm(range(len(groups)), desc='Tradfri groups', unit=' group'):
-        lightgroup.append(tradfriStatus.tradfri_get_group(hubip, securityid,
+        lightgroup.append(tradfriStatus.tradfri_get_group(hubip, clientid, securityid,
                                                           str(groups[groupid])))
 
     print('[+] Tradfri: device information gathered')

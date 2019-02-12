@@ -2,27 +2,33 @@
 python framework for controlling the Ikea smart lights (tradfri)
 
 ### requirements
-at this moment there is no coap libs with dTLS, the ikea smart lights are using dTLS with coap for security. the only option is to build a new libcoap with dTLS included. libcoap requires `cunit, a2x, doxygen and dot` you need to install these requirements first.
+coap-client with dTLS support
 
-when this is installed run the build script for compiling libcoap
 ```bash
-cd bin
-./build.sh
+git clone --depth 1 --recursive -b dtls https://github.com/home-assistant/libcoap.git
+cd libcoap
+./autogen.sh
+./configure --disable-documentation --disable-shared --without-debug CFLAGS="-D COAP_DEBUG_FD=stderr"
+make
+make install
 ```
 
 the framework also requires `tqdm` for showing progressbars, you could strip it from the sourcecode or install the module for python: `pip install pip --upgrade && pip install tqdm`.
 
 ### libcoap usage
 ```bash
+# getting key for a clientid
+./coap-client -m post -u "<clientid>" -k "<security_code_from_gateway>" -e '{"9090":"IDENTITY"}' "coaps://<hub>:5684/15011/9063"
+
 # getting tradfri information
-./coap-client -m get -u "Client_identity" -k "<key>" "coaps://<hup>:5684/15001"
+./coap-client -m get -u "<clientid>" -k "<key>" "coaps://<hup>:5684/15001"
 # getting tradfri lightbulb status
-./coap-client -m get -u "Client_identity" -k "<key>" "coaps://<hup>:5684/15001/65537"
+./coap-client -m get -u "<clientid>" -k "<key>" "coaps://<hup>:5684/15001/65537"
 
 # turn on tradfri lightbulb
-./coap-client -m put -u "Client_identity" -k "<key>" -e '{ "3311" : [{ "5850" : 1 ]} }' "coaps://<hup>:5684/15001/65537"
+./coap-client -m put -u "<clientid>" -k "<key>" -e '{ "3311" : [{ "5850" : 1 ]} }' "coaps://<hup>:5684/15001/65537"
 # turn off tradfri lightbulb
-./coap-client -m put -u "Client_identity" -k "<key>" -e '{ "3311" : [{ "5850" : 0 ]} }' "coaps://<hup>:5684/15001/65537"
+./coap-client -m put -u "<clientid>" -k "<key>" -e '{ "3311" : [{ "5850" : 0 ]} }' "coaps://<hup>:5684/15001/65537"
 ```
 
 ### output

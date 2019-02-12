@@ -23,16 +23,18 @@
 # pylint: disable=C0103
 
 import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
 import os
 import json
 
 global coap
 coap = '/usr/local/bin/coap-client'
 
-def tradfri_get_devices(hubip, securityid):
+def tradfri_get_devices(hubip, clientid, securityid):
     """ function for getting all tradfri device ids """
     tradfriHub = 'coaps://{}:5684/15001' .format(hubip)
-    api = '{} -m get -u "Client_identity" -k "{}" "{}" | awk \'NR==4\'' .format(coap, securityid,
+    api = '{} -m get -u "{}" -k "{}" "{}" | awk \'NR==4\'' .format(coap, clientid, securityid,
                                                                                 tradfriHub)
 
     if os.path.exists(coap):
@@ -43,10 +45,10 @@ def tradfri_get_devices(hubip, securityid):
 
     return json.loads(result.read().strip('\n'))
 
-def tradfri_get_lightbulb(hubip, securityid, deviceid):
+def tradfri_get_lightbulb(hubip, clientid, securityid, deviceid):
     """ function for getting tradfri lightbulb information """
     tradfriHub = 'coaps://{}:5684/15001/{}' .format(hubip, deviceid)
-    api = '{} -m get -u "Client_identity" -k "{}" "{}" | awk \'NR==4\''.format(coap, securityid,
+    api = '{} -m get -u "{}" -k "{}" "{}" | awk \'NR==4\''.format(coap, clientid, securityid,
                                                                                tradfriHub)
 
     if os.path.exists(coap):
@@ -57,10 +59,10 @@ def tradfri_get_lightbulb(hubip, securityid, deviceid):
 
     return json.loads(result.read().strip('\n'))
 
-def tradfri_get_groups(hubip, securityid):
+def tradfri_get_groups(hubip, clientid, securityid):
     """ function for getting tradfri groups """
     tradfriHub = 'coaps://{}:5684/15004'.format(hubip)
-    api = '{} -m get -u "Client_identity" -k "{}" "{}" | awk \'NR==4\''.format(coap, securityid,
+    api = '{} -m get -u "{}" -k "{}" "{}" | awk \'NR==4\''.format(coap, clientid, securityid,
                                                                                tradfriHub)
 
     if os.path.exists(coap):
@@ -71,10 +73,10 @@ def tradfri_get_groups(hubip, securityid):
 
     return json.loads(result.read().strip('\n'))
 
-def tradfri_get_group(hubip, securityid, groupid):
+def tradfri_get_group(hubip, clientid, securityid, groupid):
     """ function for getting tradfri group information """
     tradfriHub = 'coaps://{}:5684/15004/{}'.format(hubip, groupid)
-    api = '{} -m get -u "Client_identity" -k "{}" "{}" | awk \'NR==4\''.format(coap, securityid,
+    api = '{} -m get -u "{}" -k "{}" "{}" | awk \'NR==4\''.format(coap, clientid, securityid,
                                                                                tradfriHub)
 
     if os.path.exists(coap):
