@@ -18,7 +18,7 @@ the framework also requires `tqdm` for showing progressbars, you could strip it 
 ### libcoap usage
 ```bash
 # getting key for a clientid
-./coap-client -m post -u "<clientid>" -k "<security_code_from_gateway>" -e '{"9090":"IDENTITY"}' "coaps://<hub>:5684/15011/9063"
+./coap-client -m post -u "<clientid>" -k "<security_code_from_gateway>" -e '{"9090":"<clientid>"}' "coaps://<hub>:5684/15011/9063"
 
 # getting tradfri information
 ./coap-client -m get -u "<clientid>" -k "<key>" "coaps://<hup>:5684/15001"
